@@ -1,8 +1,9 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-import products from "./data/products.js";
 import connectDB from "./config/db.js";
 import productRoutes from "./routes/productRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import { errorHandler, notFound } from "./middelware/errorHandler.js";
 
 dotenv.config();
@@ -11,14 +12,19 @@ connectDB();
 
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("server is running");
-});
+// BODY PARSER MIDDELWARE
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+// COOKIE PARSER MIDDELWARE
+app.use(cookieParser());
+
+// ROUTES
 app.use("/api/products", productRoutes);
+app.use("/api/users", userRoutes);
 
+// ERROR MIDDELWARE
 app.use(notFound);
-
 app.use(errorHandler);
 
 const port = process.env.PORT || 5000;
