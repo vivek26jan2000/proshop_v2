@@ -5,7 +5,7 @@ import { Form, Row, Col, Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import FormContainer from "../components/FormContainer";
 import Loader from "../components/Loader";
-import { useLoginMutation, useRegisterMutation } from "../slices/usersApiSlice";
+import { useRegisterMutation } from "../slices/usersApiSlice";
 import { setCrendentials } from "../slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -57,7 +57,7 @@ const RegisterScreen = () => {
         <Form.Group controlId="name" className="my-3">
           <Form.Label>Name</Form.Label>
           <Form.Control
-            type="name"
+            type="text"
             placeholder="Enter Name"
             value={name}
             onChange={(e) => {
