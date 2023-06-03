@@ -10,13 +10,14 @@ import {
   ListGroup,
   Button,
 } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Message from "../components/Message";
 import { addToCart, removeFromCart } from "../slices/cartSlice";
 
 const CartScreen = () => {
   const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { cartItems } = cart;
 
   const addToCartHandler = (product, qty) => {
@@ -26,6 +27,11 @@ const CartScreen = () => {
   const removerFromCartHandler = (id) => {
     dispatch(removeFromCart(id));
   };
+
+  const checkoutHandler = () => {
+    navigate("/login?redirect=/shipping");
+  };
+
   return (
     <>
       <h1 style={{ marginBottom: "30px" }}>Shopping Cart</h1>
@@ -94,7 +100,8 @@ const CartScreen = () => {
                   <Button
                     type="button"
                     className="btn-block"
-                    disabled={cartItems.length === 0}>
+                    disabled={cartItems.length === 0}
+                    onClick={checkoutHandler}>
                     Proceed To Checkout
                   </Button>
                 </ListGroup.Item>
