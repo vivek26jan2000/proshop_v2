@@ -18,7 +18,7 @@ router
 
 router.get("/myorders", protect, getMyOrders);
 
-router.get("/:id", protect, admin, getOrderById);
+router.get("/:id", protect, getOrderById);
 router.put("/:id/pay", protect, updateOrderToPay);
 router.put("/:id/deliver", protect, admin, updateOrderToDelivered);
 
