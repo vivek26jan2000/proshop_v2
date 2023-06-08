@@ -6,6 +6,7 @@ import {
   useGetOrderDetailsQuery,
   useGetPaypalClientIdQuery,
   usePayOrderMutation,
+  useUpdateDeliverStatusMutation,
 } from "../slices/ordersApiSlice";
 import { useParams, Link } from "react-router-dom";
 import Message from "../components/Message";
@@ -22,6 +23,8 @@ const OrderScreen = () => {
     error,
   } = useGetOrderDetailsQuery(orderId);
   const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
+  const [updateDeliverStatus, { isLoading: loadingDeliverStatus }] =
+    useUpdateDeliverStatusMutation();
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
   const {
     data: paypal,
@@ -81,6 +84,17 @@ const OrderScreen = () => {
         ],
       })
       .then((orderId) => orderId);
+  };
+
+  const deliveredStatusHandler = async () => {
+    try {
+      await updateDeliverStatus(orderId).unwrap();
+      toast.success("Delivery status change successfully");
+      refetch();
+    } catch (err) {
+      console.log(err.data.message);
+      toast.error(err?.data.message || err.error);
+    }
   };
 
   return isLoading ? (
@@ -211,6 +225,24 @@ const OrderScreen = () => {
                     </div>
                   )}
                 </ListGroup.Item>
+              )}
+
+              {order.isPaid && !order.isDelivered && (
+                <>
+                  {loadingDeliverStatus ? (
+                    <Loader />
+                  ) : (
+                    <ListGroup.Item className="text-center">
+                      <Button
+                        type="button"
+                        variant="primary"
+                        className="btn-block"
+                        onClick={deliveredStatusHandler}>
+                        Mark As Delivered
+                      </Button>
+                    </ListGroup.Item>
+                  )}
+                </>
               )}
             </ListGroup>
           </Card>
