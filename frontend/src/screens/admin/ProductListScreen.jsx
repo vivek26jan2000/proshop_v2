@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { LinkContainer } from "react-router-bootstrap";
 import {
   useCreateProductMutation,
+  useDeleteProductMutation,
   useGetProductsQuery,
 } from "../../slices/productsApiSlice";
 import Loader from "../../components/Loader";
@@ -15,6 +16,9 @@ const ProductListScreen = () => {
   const [createProduct, { isLoading: loadingCreate }] =
     useCreateProductMutation();
 
+  const [deleteProduct, { isLoading: loadingDelete }] =
+    useDeleteProductMutation();
+
   const createProductHandler = async () => {
     if (window.confirm("Are you sure you want to Create new Product")) {
       try {
@@ -23,6 +27,18 @@ const ProductListScreen = () => {
         toast.success("Product Created Successfully");
       } catch (err) {
         toast.error(err?.data.message || err.error);
+      }
+    }
+  };
+
+  const deleteHandler = async (id) => {
+    if (window.confirm("Are you sure")) {
+      try {
+        await deleteProduct(id);
+        toast.success("product deleted successfully");
+        refetch();
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
       }
     }
   };
@@ -44,6 +60,7 @@ const ProductListScreen = () => {
         </Col>
       </Row>
       {loadingCreate && <Loader />}
+      {loadingDelete && <Loader />}
       <Row>
         <Col>
           {isLoading ? (
@@ -77,7 +94,10 @@ const ProductListScreen = () => {
                           <FaEdit />
                         </Button>
                       </LinkContainer>
-                      <Button className="btn-sm mx-3" variant="light">
+                      <Button
+                        className="btn-sm mx-3"
+                        variant="light"
+                        onClick={() => deleteHandler(product._id)}>
                         <FaTrash />
                       </Button>
                     </td>

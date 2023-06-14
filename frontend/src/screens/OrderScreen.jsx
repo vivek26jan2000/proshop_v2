@@ -12,9 +12,12 @@ import { useParams, Link } from "react-router-dom";
 import Message from "../components/Message";
 
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
+
+  const { userInfo } = useSelector((state) => state.auth);
 
   const {
     data: order,
@@ -227,23 +230,26 @@ const OrderScreen = () => {
                 </ListGroup.Item>
               )}
 
-              {order.isPaid && !order.isDelivered && (
-                <>
-                  {loadingDeliverStatus ? (
-                    <Loader />
-                  ) : (
-                    <ListGroup.Item className="text-center">
-                      <Button
-                        type="button"
-                        variant="primary"
-                        className="btn-block"
-                        onClick={deliveredStatusHandler}>
-                        Mark As Delivered
-                      </Button>
-                    </ListGroup.Item>
-                  )}
-                </>
-              )}
+              {order.isPaid &&
+                !order.isDelivered &&
+                userInfo &&
+                userInfo.isAdmin && (
+                  <>
+                    {loadingDeliverStatus ? (
+                      <Loader />
+                    ) : (
+                      <ListGroup.Item className="text-center">
+                        <Button
+                          type="button"
+                          variant="primary"
+                          className="btn-block"
+                          onClick={deliveredStatusHandler}>
+                          Mark As Delivered
+                        </Button>
+                      </ListGroup.Item>
+                    )}
+                  </>
+                )}
             </ListGroup>
           </Card>
         </Col>
