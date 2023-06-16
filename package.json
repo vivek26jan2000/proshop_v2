@@ -10,7 +10,8 @@
     "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "data:import": "node backend/seeker",
-    "data:destroy": "node backend/seeker -d"
+    "data:destroy": "node backend/seeker -d",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "author": "vivek sharma",
   "license": "ISC",
